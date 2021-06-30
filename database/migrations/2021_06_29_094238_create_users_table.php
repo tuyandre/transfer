@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('profile')->nullable();
             $table->bigInteger('nid')->unique()->nullable();
-            $table->bigInteger('telephone')->nullable();
+            $table->string('telephone')->nullable();
             $table->string('country')->nullable();
             $table->bigInteger('compte')->unique()->nullable();
             $table->string('currency')->default('RWF');

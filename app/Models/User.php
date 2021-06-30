@@ -27,6 +27,7 @@ class User extends Authenticatable
         'currency',
         'compte',
         'password',
+        'role_id'
     ];
 
     /**

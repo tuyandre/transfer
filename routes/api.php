@@ -14,9 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('client/login',[App\Http\Controllers\ApiController::class,'clientLogin'])->name('api.clients.login');
-Route::post('client/register',[App\Http\Controllers\ApiController::class,'clientRegister'])->name('api.clients.register');
-Route::post('client/getTransaction',[App\Http\Controllers\ApiController::class,'clientGetTransaction'])->name('api.clients.clientGetTransaction');
+Route::post('/client/login',[App\Http\Controllers\ApiController::class,'clientLogin'])->name('api.clients.login');
+Route::post('/client/register',[App\Http\Controllers\ApiController::class,'clientRegister'])->name('api.clients.register');
+Route::post('/client/getTransaction',[App\Http\Controllers\ApiController::class,'clientGetTransaction'])->name('api.clients.clientGetTransaction');
+Route::post('/client/getClientTransaction',[App\Http\Controllers\ApiController::class,'getClientTransaction'])->name('api.clients.getClientTransaction');
+Route::post('/client/getClientBalance',[App\Http\Controllers\ApiController::class,'getClientBalance'])->name('api.clients.getClientBalance');
+Route::post('/client/clientTransferMoney',[App\Http\Controllers\ApiController::class,'clientTransferMoney'])->name('api.clients.clientTransferMoney');
 
 
 

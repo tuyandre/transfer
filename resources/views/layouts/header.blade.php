@@ -5,7 +5,7 @@
         <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto pt-2 pt-lg-0 font-base">
                 <li class="nav-item px-2" data-anchor="data-anchor">
-                    <a class="nav-link text-white fw-bold active" aria-current="page" href="{{url('/')}}">Home</a></li>
+                    <a class="nav-link text-white fw-bold active" aria-current="page" href="{{url('/')}}">Quick Money Transfer</a></li>
 
             </ul>
             @if (Route::has('login'))

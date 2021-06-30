@@ -17,4 +17,12 @@ class Transaction extends Model
         'balances',
         'fees',
     ];
+    public function Transfer()
+    {
+        return $this->belongsTo('App\Models\User','transfer_id');
+    }
+    public function Receiver()
+    {
+        return $this->belongsTo('App\Models\User','receiver_id');
+    }
 }

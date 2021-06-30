@@ -59,7 +59,7 @@ Route::prefix('/Administration/')->group(
         Route::get('clients/transactions',[App\Http\Controllers\AgentController::class,'clientTransaction'])->name('agent.clients.clientTransaction');
         Route::get('clients/getClientTransaction',[App\Http\Controllers\AgentController::class,'getClientTransaction'])->name('agent.clients.getClientTransaction');
 
-        Route::get('auth/transaction',[App\Http\Controllers\AgentController::class,'agentTransaction'])->name('agent.auth.agentTransaction');
+        Route::get('auth/tasks',[App\Http\Controllers\AgentController::class,'agentTransaction'])->name('agent.auth.agentTransaction');
         Route::get('auth/getMyTransaction',[App\Http\Controllers\AgentController::class,'getMyTransaction'])->name('agent.auth.getMyTransaction');
 
     });
