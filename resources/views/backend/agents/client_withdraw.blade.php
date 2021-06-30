@@ -1,20 +1,17 @@
 @extends('backend.includes.master')
 
-@section('title','Devices')
+@section('title','User')
 @section('css')
     <!-- Internal DataTables css-->
     <link href="{{asset('dashboard/assets/plugins/datatable/dataTables.bootstrap4.min.css')}}" rel="stylesheet" />
     <link href="{{asset('dashboard/assets/plugins/datatable/responsivebootstrap4.min.css')}}" rel="stylesheet" />
     <link href="{{asset('dashboard/assets/plugins/datatable/fileexport/buttons.bootstrap4.min.css')}}" rel="stylesheet" />
 @endsection
-@section('content_title','System Devices List')
-@section('content_target','Available Devices')
-{{--@section('action_buttons')--}}
-{{--    <button type="button" class="btn btn-primary my-2 btn-icon-text" id="add_device">--}}
-{{--        <i class="fe fe-user-plus mr-2"></i> Add New Device--}}
-{{--    </button>--}}
-{{--@endsection--}}
+@section('content_title','Clients Transaction')
+@section('content_target','Clients Withdraw Transaction')
+
 @section('contents')
+
 
     <!-- Row -->
     <div class="row row-sm">
@@ -22,19 +19,20 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div>
-                        <h6 class="main-content-label mb-1">Available Devices List</h6>
+                        <h6 class="main-content-label mb-1">Client Withdraw Transaction</h6>
 
                     </div>
                     <div class="table-responsive table-hover">
-                        <table class="table" id="DeviceListTable">
+                        <table class="table" id="userListTable">
                             <thead>
                             <tr>
-                                <th class="wd-20p">Device Name</th>
-                                <th class="wd-20p">Device Brand</th>
-                                <th class="wd-20p">Device Model</th>
-                                <th class="wd-20p">Device S/N</th>
-                                <th class="wd-25p">Status</th>
-                                <th class="wd-20p">Action</th>
+                                <th class="wd-20p">Date</th>
+                                <th class="wd-20p">Agent Name</th>
+                                <th class="wd-25p">Client Name</th>
+                                <th class="wd-20p">Previous Balannces</th>
+                                <th class="wd-20p">Amount</th>
+                                <th class="wd-20p">Balance</th>
+                                <th class="wd-15p">Charges</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -46,53 +44,39 @@
             </div>
         </div>
     </div>
-
+    <!-- End Row -->
 
     <input type="hidden" value="{{ Session::token() }}" id="token">
 @endsection
 @section('js')
     <script>
-        var defaultUrl = "{{ route('admin.devices.getAvailableDevices') }}";
+
+        var defaultUrl = "{{ route('agent.clients.getClientSaving') }}";
         var table;
-        var manageTable = $("#DeviceListTable");
+        var manageTable = $("#userListTable");
         function myFunc() {
             table = manageTable.DataTable({
                 ajax: {
                     url: defaultUrl,
-                    dataSrc: 'devices'
+                    dataSrc: 'transactions'
                 },
                 columns: [
-                    {data: 'device_name'},
-                    {data: 'device_brand'},
-                    {data: 'device_model'},
-                    {data: 'device_serialNo'},
-                    {data: 'status',
-                        render: function (data, type, row) {
-                            if(row.status==1){
-                                return "<span class='bg-success'> Available</span>";
-                            }else {
-                                return "<span class='bg-warning'>Not  Available</span>";
-                            }
 
-                        }},
-                    {
-                        data: 'status',
-                        render: function (data, type, row) {
-                            var url_more = '{{ route("admin.devices.deviceDetail", ":id") }}';
-                            url_more = url_more.replace(':id', row.id);
-                                return"<a  href='" + url_more + "' class='btn btn-info btn-sm btn-flat js-detail' data-id='" + data +
-                                    "' > <i class='fa fa-eye'></i>View</a>";
-
-                        }
-                    }
+                    {data: 'created_at'},
+                    {data: 'previous_balances'},
+                    {data: 'previous_balances'},
+                    {data: 'previous_balances'},
+                    {data: 'amounts'},
+                    {data: 'balances'},
+                    {data: 'fees'}
                 ]
             });
         }
 
 
         $(document).ready(function () {
-            $("#add_device").click(function () {
-                $("#addDevice").modal({
+            $("#add_user").click(function(){
+                $("#addUser").modal({
                     backdrop: 'static',
                     keyboard: false
                 });
@@ -102,6 +86,8 @@
 
         });
     </script>
+
+
     <!-- Internal Data Table js -->
     <script src="{{asset('dashboard/assets/plugins/datatable/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('dashboard/assets/plugins/datatable/dataTables.bootstrap4.min.js')}}"></script>

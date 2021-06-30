@@ -1,20 +1,17 @@
 @extends('backend.includes.master')
 
-@section('title','Devices')
+@section('title','User')
 @section('css')
     <!-- Internal DataTables css-->
     <link href="{{asset('dashboard/assets/plugins/datatable/dataTables.bootstrap4.min.css')}}" rel="stylesheet" />
     <link href="{{asset('dashboard/assets/plugins/datatable/responsivebootstrap4.min.css')}}" rel="stylesheet" />
     <link href="{{asset('dashboard/assets/plugins/datatable/fileexport/buttons.bootstrap4.min.css')}}" rel="stylesheet" />
 @endsection
-@section('content_title','System Devices List')
-@section('content_target','Historical Devices')
-{{--@section('action_buttons')--}}
-{{--    <button type="button" class="btn btn-primary my-2 btn-icon-text" id="add_device">--}}
-{{--        <i class="fe fe-user-plus mr-2"></i> Add New Device--}}
-{{--    </button>--}}
-{{--@endsection--}}
+@section('content_title','Transaction List')
+@section('content_target','Customer Transaction  Detail')
+
 @section('contents')
+
 
     <!-- Row -->
     <div class="row row-sm">
@@ -22,21 +19,20 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div>
-                        <h6 class="main-content-label mb-1">Historical Devices List</h6>
+                        <h6 class="main-content-label mb-1"> <span style="color:#34ce57;">{{$user->name}} </span>  Transaction Detail</h6>
 
                     </div>
                     <div class="table-responsive table-hover">
-                        <table class="table" id="DeviceListTable">
+                        <table class="table" id="userListTable">
                             <thead>
                             <tr>
-                                <th class="wd-20p">Device Name</th>
-{{--                                <th class="wd-20p">Device Brand</th>--}}
-                                <th class="wd-20p">Device Model</th>
-                                <th class="wd-20p">Device S/N</th>
-                                <th class="wd-25p">Member</th>
-                                <th class="wd-25p">Received Date</th>
-                                <th class="wd-25p">Returned Date</th>
-{{--                                <th class="wd-20p">Action</th>--}}
+                                <th class="wd-20p">Date</th>
+                                <th class="wd-20p">Sender/Agent Name</th>
+                                <th class="wd-25p">Receiver Name</th>
+                                <th class="wd-20p">Previous Balannces</th>
+                                <th class="wd-20p">Amount</th>
+                                <th class="wd-20p">Balance</th>
+                                <th class="wd-15p">Charges</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -48,45 +44,43 @@
             </div>
         </div>
     </div>
-
+    <!-- End Row -->
 
     <input type="hidden" value="{{ Session::token() }}" id="token">
 @endsection
 @section('js')
     <script>
-        var defaultUrl = "{{ route('admin.devices.getHistorical') }}";
+
+        var defaultUrl = "{{ route('admin.users.getCustomerDetail',['id'=>$user->id]) }}"
+        {{--var defaultUrl = '{{ route("admin.users.getCustomerDetail", ":id") }}';--}}
+        {{--var user="{{$user->id}}";--}}
+        {{--defaultUrl = url.replace(':id', user);--}}
+
         var table;
-        var manageTable = $("#DeviceListTable");
+        var manageTable = $("#userListTable");
         function myFunc() {
             table = manageTable.DataTable({
                 ajax: {
                     url: defaultUrl,
-                    dataSrc: 'devices'
+                    dataSrc: 'transactions'
                 },
                 columns: [
-                    {data: 'device.device_name'},
-                    {data: 'device.device_model'},
-                    {data: 'device.device_serialNo'},
-                    {data: 'member_id',
-                        render: function (data, type, row) {
 
-                            if (data !=null){
-                                return "<span>"+row.member.first_name+" "+row.member.last_name+"</span>";
-                            }else{
-                                return "";
-                            }
-                        }
-                    },
-                    {data: 'received_date'},
-                    {data: 'returned_date'}
+                    {data: 'created_at'},
+                    {data: 'previous_balances'},
+                    {data: 'previous_balances'},
+                    {data: 'previous_balances'},
+                    {data: 'amounts'},
+                    {data: 'balances'},
+                    {data: 'fees'}
                 ]
             });
         }
 
 
         $(document).ready(function () {
-            $("#add_device").click(function () {
-                $("#addDevice").modal({
+            $("#add_user").click(function(){
+                $("#addUser").modal({
                     backdrop: 'static',
                     keyboard: false
                 });
@@ -96,6 +90,8 @@
 
         });
     </script>
+
+
     <!-- Internal Data Table js -->
     <script src="{{asset('dashboard/assets/plugins/datatable/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('dashboard/assets/plugins/datatable/dataTables.bootstrap4.min.js')}}"></script>

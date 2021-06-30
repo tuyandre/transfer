@@ -11,7 +11,7 @@
 @section('content_target','User List')
 @section('action_buttons')
     <button type="button" class="btn btn-primary my-2 btn-icon-text" id="add_user">
-        <i class="fe fe-user-plus mr-2"></i> Add New User
+        <i class="fe fe-user-plus mr-2"></i> Add New Agent
     </button>
     @endsection
     @section('contents')
@@ -30,12 +30,13 @@
                             <table class="table" id="userListTable">
                                 <thead>
                                 <tr>
-                                    <th class="wd-20p">First Name</th>
-                                    <th class="wd-20p">Last Name</th>
+                                    <th class="wd-20p">Full Name</th>
                                     <th class="wd-25p">Email</th>
                                     <th class="wd-20p">Telophone</th>
-                                    <th class="wd-20p">Position</th>
-                                    <th class="wd-15p">Status</th>
+                                    <th class="wd-20p">Role</th>
+                                    <th class="wd-20p">Country</th>
+                                    <th class="wd-15p">Nid</th>
+                                    <th class="wd-15p">Compte</th>
                                     <th class="wd-20p">Action</th>
                                 </tr>
                                 </thead>
@@ -54,11 +55,11 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content modal-content-demo">
                     <div class="modal-header">
-                        <h6 class="modal-title">Add users</h6><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+                        <h6 class="modal-title">Add New Agent</h6><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
                         <div id="add-messages"></div>
-                        <form action="{{route('users.saveMember')}}" method="post" data-parsley-validate="" id="frmSave">
+                        <form action="{{route('admin.users.storeUser')}}" method="post" data-parsley-validate="" id="frmSave">
                             {{ csrf_field() }}
                             <div class="">
                                 <div class="row row-sm form-group">
@@ -66,22 +67,21 @@
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                    Position:
+                                                    Country:
                                                 </div>
                                             </div>
-                                            <?php
 
-                                            $roles=\App\Models\Role::all();
-                                            ?>
-
-                                            <select name="role" class="form-control select2">
-                                                <option value="">Select Position</option>
+                                            <select name="country" class="form-control select2">
+                                                <option value="">Select Agent Country</option>
 {{--                                                @foreach($roles as $role)--}}
 {{--                                                <option value="{{$role->id}}">{{$role->display_name}}</option>--}}
 {{--                                                @endforeach--}}
-                                                <option value="admin">Administrator</option>
-                                                <option value="member">Member</option>
-                                                <option value="senior">Senior Employer</option>
+                                                <option value="RWANDA">RWANDA</option>
+                                                <option value="TANZANIE">TANZANIE</option>
+                                                <option value="KENYA">KENYA</option>
+                                                <option value="UGANDA">UGANDA</option>
+                                                <option value="BURUNDI">BURUNDI</option>
+                                                <option value="SOUTH SUDAN">SOUTH SUDAN</option>
                                             </select>
 {{--                                            <input class="form-control" id="textMask" name="first_name" placeholder="First name" type="text" required>--}}
                                         </div>
@@ -92,9 +92,9 @@
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                    First Name:
+                                                    Full Name:
                                                 </div>
-                                            </div><input class="form-control" id="textMask" name="first_name" placeholder="First name" type="text" required>
+                                            </div><input class="form-control" id="textMask" name="full_name" placeholder="Full name" type="text" required>
                                         </div>
                                     </div>
                                 </div>
@@ -103,9 +103,9 @@
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                    Last Name:
+                                                    Identity:
                                                 </div>
-                                            </div><input class="form-control" name="last_name" required id="mask" placeholder="Last Name" type="text">
+                                            </div><input class="form-control" name="nid" required id="mask" placeholder="National Identity" type="text">
                                         </div>
                                     </div>
                                 </div>
@@ -172,47 +172,30 @@
     @section('js')
         <script>
 
-            var defaultUrl = "{{ route('members.getMembers') }}";
+            var defaultUrl = "{{ route('admin.users.getAllUsers') }}";
             var table;
             var manageTable = $("#userListTable");
             function myFunc() {
                 table = manageTable.DataTable({
                     ajax: {
                         url: defaultUrl,
-                        dataSrc: 'members'
+                        dataSrc: 'users'
                     },
                     columns: [
 
-                        {data: 'first_name'},
-                        {data: 'last_name'},
+                        {data: 'name'},
                         {data: 'email'},
                         {data: 'telephone'},
                         {data: 'role.display_name'},
-                        {data: 'confirmed',
-                            render: function (data, type, row) {
-                                if(row.confirmed==1){
-                                    return "<span class='bg-success'> Activated</span>";
-                                }else {
-                                    return "<span class='bg-warning'>Not  Activated</span>";
-                                }
-
-                            }},
+                        {data: 'country'},
+                        {data: 'nid'},
+                        {data: 'compte'},
                         {
                             data: 'id',
                             render: function (data, type, row) {
-                                if(row.confirmed==1){
-                                    return"<a  href='/Administration/member/detail/" + row.id + "' class='btn btn-info btn-sm btn-flat js-detail' data-id='" + data +
-                                        "' > <i class='fa fa-eye'></i>View</a>" +
-                                        "<button class='btn btn-danger btn-sm btn-flat js-delete ' data-id='" + data +
-                                        "' data-url='/Administration/member/delete/" + row.id + "'> <i class='fa fa-trash'></i>Delete</button>";
-                                }else {
-                                    return "<button class='btn btn-success btn-sm btn-flat js-confirm' data-id='" + data +
-                                        "' data-url='/Administration/member/confirm/" + row.id + "'> <i class='fa fa-check'></i>Confirm</button>" +
-                                        "<a  href='/Administration/member/detail/" + row.id + "' class='btn btn-info btn-sm btn-flat js-detail' data-id='" + data +
-                                        "' > <i class='fa fa-eye'></i>View</a>" +
-                                        "<button class='btn btn-danger btn-sm btn-flat js-delete ' data-id='" + data +
-                                        "' data-url='/Administration/member/delete/" + row.id + "'> <i class='fa fa-trash'></i>Delete</button>";
-                                }
+                                    return"<a  href='/Administration/users/customerDetail/" + row.id + "' class='btn btn-info btn-sm btn-flat js-detail' data-id='" + data +
+                                        "' > <i class='fa fa-eye'></i>View</a>";
+
 
                             }
                         }
