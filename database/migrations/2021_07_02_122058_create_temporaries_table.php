@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTransactionsTable extends Migration
+class CreateTemporariesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('temporaries', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('transfer_id')->nullable();
             $table->unsignedBigInteger('agent_id')->nullable();
@@ -24,6 +24,7 @@ class CreateTransactionsTable extends Migration
             $table->bigInteger('fees')->default(0);
             $table->bigInteger('compte');
             $table->string('category')->default("saving");
+            $table->boolean('status')->default(0);
             $table->timestamps();
             $table->foreign('transfer_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('agent_id')->references('id')->on('users')->onDelete('cascade');
@@ -39,6 +40,6 @@ class CreateTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('temporaries');
     }
 }

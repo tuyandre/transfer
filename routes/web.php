@@ -60,7 +60,7 @@ Route::prefix('/Administration/')->group(
 
 
 
-        Route::get('clients/withdraw',[App\Http\Controllers\AgentController::class,'clientWithdraw'])->name('agent.clients.clientWithdraw');
+        Route::get('clients/withdraws',[App\Http\Controllers\AgentController::class,'clientWithdraw'])->name('agent.clients.clientWithdraw');
         Route::get('clients/getClientWithdraw',[App\Http\Controllers\AgentController::class,'getClientWithdraw'])->name('agent.clients.getClientWithdraw');
 
         Route::get('clients/transactions',[App\Http\Controllers\AgentController::class,'clientTransaction'])->name('agent.clients.clientTransaction');
@@ -68,5 +68,9 @@ Route::prefix('/Administration/')->group(
 
         Route::get('auth/tasks',[App\Http\Controllers\AgentController::class,'agentTransaction'])->name('agent.auth.agentTransaction');
         Route::get('auth/getMyTransaction',[App\Http\Controllers\AgentController::class,'getMyTransaction'])->name('agent.auth.getMyTransaction');
+
+        Route::get('clients/withdraw_pending',[App\Http\Controllers\AgentController::class,'clientPendingWithdraw'])->name('agent.clients.clientPendingWithdraw');
+        Route::get('clients/getClientPendingWithdraw',[App\Http\Controllers\AgentController::class,'getClientPendingWithdraw'])->name('agent.clients.getClientPendingWithdraw');
+        Route::get('clients/approvePendingWithdraw/{id}',[App\Http\Controllers\AgentController::class,'approvePendingWithdraw'])->name('agent.clients.approvePendingWithdraw');
 
     });

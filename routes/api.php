@@ -20,6 +20,7 @@ Route::post('/client/getTransaction',[App\Http\Controllers\ApiController::class,
 Route::post('/client/getClientTransaction',[App\Http\Controllers\ApiController::class,'getClientTransaction'])->name('api.clients.getClientTransaction');
 Route::post('/client/getClientBalance',[App\Http\Controllers\ApiController::class,'getClientBalance'])->name('api.clients.getClientBalance');
 Route::post('/client/clientTransferMoney',[App\Http\Controllers\ApiController::class,'clientTransferMoney'])->name('api.clients.clientTransferMoney');
+Route::post('/client/clientWithdrawMoney',[App\Http\Controllers\ApiController::class,'clientWithdraw'])->name('api.clients.clientWithdrawMoney');
 
 
 

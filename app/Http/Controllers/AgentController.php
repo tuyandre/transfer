@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CompanyCompte;
+use App\Models\Temporary;
 use App\Models\Transaction;
 use App\Models\User;
 use AshAllenDesign\LaravelExchangeRates\Classes\ExchangeRate;
@@ -34,6 +36,16 @@ class AgentController extends Controller
     }
     public function getClientWithdraw(){
         $trans=Transaction::with(['Transfer','Receiver'])
+            ->where('receiver_id','=',Auth::user()->id)
+            ->where('category','=',"Withdraw")
+            ->orderBy('id', 'DESC')->get();
+        return response()->json(['transactions' => $trans], 200);
+    }
+    public function clientPendingWithdraw(){
+        return view('backend.agents.pending_withdraw');
+    }
+    public function getClientPendingWithdraw(){
+        $trans=Temporary::with(['Transfer','Receiver'])
             ->where('receiver_id','=',Auth::user()->id)
             ->where('category','=',"Withdraw")
             ->orderBy('id', 'DESC')->get();
@@ -126,4 +138,64 @@ class AgentController extends Controller
         }
     }
 
+    public function approvePendingWithdraw($id){
+        $temp=Temporary::find($id);
+        if ($temp){
+            $client=User::find($temp->transfer_id);
+            $agent_bal=Transaction::where('compte','=',Auth::user()->compte)->first();
+            $client_bal=Transaction::where('compte','=',$client->compte)->first();
+            $charges=$temp->fees;
+
+            $withdraw = new Transaction();
+            $withdraw->transfer_id=$client->id;
+            $withdraw->balances=($client_bal->balances-$charges-$temp->amounts);
+            $withdraw->amounts=$temp->amounts;
+            $withdraw->receiver_id=Auth::user()->id;
+            $withdraw->compte=$client->compte;
+            $withdraw->previous_balances=$client_bal->balances;
+            $withdraw->category="Withdraw";
+            $withdraw->save();
+            if ($agent_bal) {
+                $agent = new Transaction();
+                $agent->transfer_id = $client->id;
+                $agent->balances = ($agent_bal->balances + $temp->amounts);
+                $agent->amounts = $temp->amounts;
+                $agent->receiver_id = Auth::user()->id;
+                $agent->compte = Auth::user()->compte;
+                $agent->previous_balances = $agent_bal->balances;
+                $agent->category = "Agent_Withdraw";
+                $agent->fees=$charges;
+                $agent->save();
+            }else{
+                $agent = new Transaction();
+                $agent->transfer_id = $client->id;
+                $agent->balances = ($temp->amounts);
+                $agent->amounts = $temp->amounts;
+                $agent->receiver_id = Auth::user()->id;
+                $agent->compte = Auth::user()->compte;
+               $agent->fees=$charges;
+                $agent->category = "Agent_Withdraw";
+                $agent->save();
+            }
+            $company=CompanyCompte::orderBy('id', 'DESC')->first();
+            if ($company){
+                $rates = new CompanyCompte();
+                $rates->transfer_id=$client->id;
+                $rates->balances=($company->balances+$charges);
+                $rates->amounts=$charges;
+                $rates->receiver_id=Auth::user()->id;
+                $rates->previous_balances=$company->balances;
+                $rates->save();
+            }else{
+                $rates = new CompanyCompte();
+                $rates->transfer_id=$client->id;
+                $rates->balances=($charges);
+                $rates->amounts=$charges;
+                $rates->receiver_id=Auth::user()->id;
+                $rates->save();
+            }
+            $temp->delete();
+            return response()->json(['status' => "ok"], 200);
+        }
+    }
 }

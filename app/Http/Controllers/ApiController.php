@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use AmrShawky\LaravelCurrency\Facade\Currency;
+use App\Models\CompanyCompte;
 use App\Models\Role;
+use App\Models\Temporary;
 use App\Models\Transaction;
 use App\Models\User;
 use AshAllenDesign\LaravelExchangeRates\Classes\ExchangeRate;
@@ -119,12 +121,14 @@ class ApiController extends Controller
         }
 
         public function clientTransferMoney(Request $request){
-            $bal=Transaction::where('transfer_id','=',$request['transfer'])
-                ->orWhere('receiver_id','=',$request['transfer'])
+            $sender=User::find($request['transfer']);
+            $bal=Transaction::where('compte','=',$sender->compte)
                 ->orderBy('id', 'DESC')->first();
        $receiver=User::where('compte','=',$request['receiver'])->first();
+            $moon=($request['amount']*3)/100;
+            $charges=(int)$moon;
        if ($bal){
-           if ($bal->balances>$request['amount']) {
+           if ($bal->balances>($request['amount']+$charges)) {
                if ($receiver) {
                    $transfer = User::find($request['transfer']);
                    $currency1 = $transfer->currency;
@@ -136,8 +140,7 @@ class ApiController extends Controller
                        ->to($currency2)
                        ->amount($sent_amount)
                        ->get();
-                       $lastRecord=Transaction::where('transfer_id','=',$receiver->id)
-                           ->orWhere('receiver_id','=',$receiver->id)
+                       $lastRecord=Transaction::where('compte','=',$receiver->compte)
                            ->orderBy('id', 'DESC')->first();
                        if ($lastRecord){
                            $deposit = new Transaction();
@@ -161,10 +164,28 @@ class ApiController extends Controller
                        $credit->transfer_id=$transfer->id;
                        $credit->receiver_id=$receiver->id;
                        $credit->category="Transfer";
-                       $deposit->amounts=$request['amount'];
+                       $credit->amounts=$request['amount'];
                        $credit->previous_balances=$bal->balances;
-                       $credit->balances=($bal->balances-$request['amount']);
+                       $credit->balances=($bal->balances-($request['amount']+$charges));
+                       $credit->fees=$charges;
                        $credit->save();
+                   $company=CompanyCompte::orderBy('id', 'DESC')->first();
+                   if ($company){
+                       $rates = new CompanyCompte();
+                       $rates->transfer_id=$transfer->id;
+                       $rates->balances=($company->balances+$charges);
+                       $rates->amounts=$charges;
+                       $rates->receiver_id=$receiver->id;
+                       $rates->previous_balances=$company->balances;
+                       $rates->save();
+                   }else{
+                       $rates = new CompanyCompte();
+                       $rates->transfer_id=$transfer->id;
+                       $rates->balances=($charges);
+                       $rates->amounts=$charges;
+                       $rates->receiver_id=$receiver->id;
+                       $rates->save();
+                   }
                        return response()->json(['message' => "Transfer","transaction"=>$credit], 200);
 
 
@@ -179,5 +200,47 @@ class ApiController extends Controller
        }
 
         }
+        public function clientWithdraw(Request $request){
+            $sender=User::find($request['transfer']);
+            $bal=Transaction::where('compte','=',$sender->compte)
+                ->orderBy('id', 'DESC')->first();
+            $receiver=User::where('compte','=',$request['receiver'])->first();
+            $moon=($request['amount']*3)/100;
+            $charges=(int)$moon;
+            if ($bal){
+                if ($bal->balances>($request['amount']+$charges)) {
+                    if ($receiver) {
+                        $transfer = User::find($request['transfer']);
+                        $currency1 = $transfer->currency;
+                        $currency2 = $receiver->currency;
 
+                        $sent_amount=$request['amount'];
+                        $exchanged_amount=Currency::convert()
+                            ->from($currency1)
+                            ->to($currency2)
+                            ->amount($sent_amount)
+                            ->get();
+                            $deposit = new Temporary();
+                            $deposit->transfer_id=$transfer->id;
+                            $deposit->balances=$exchanged_amount;
+                            $deposit->amounts=$exchanged_amount;
+                            $deposit->receiver_id=$receiver->id;
+                            $deposit->category="Withdraw";
+                            $deposit->compte=$sender->compte;
+                            $deposit->fees=$charges;
+                            $deposit->save();
+
+                        return response()->json(['message' => "wait","transaction"=>$deposit], 200);
+
+
+                    } else {
+                        return response()->json(['message' => "invalid receiver"], 200);
+                    }
+                }else{
+                    return response()->json(['message' => "minimum balance"], 200);
+                }
+            }else{
+                return response()->json(['message' => "no saving"], 200);
+            }
+        }
 }

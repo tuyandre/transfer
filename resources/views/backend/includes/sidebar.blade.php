@@ -49,6 +49,10 @@
                     <a class="nav-link" href="{{route('agent.clients.clientSaving')}}"><span class="shape1"></span>
                         <span class="shape2"></span><i class="ti-money sidemenu-icon"></i><span class="sidemenu-label">CLIENT SAVING</span></a>
                 </li>
+                <li class="nav-item bg-warning">
+                    <a class="nav-link" href="{{route('agent.clients.clientPendingWithdraw')}}"><span class="shape1"></span>
+                        <span class="shape2"></span><i class="ti-receipt sidemenu-icon"></i><span class="sidemenu-label">CLIENT PENDING WITHDRAW</span></a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('agent.clients.clientWithdraw')}}"><span class="shape1"></span>
                         <span class="shape2"></span><i class="ti-receipt sidemenu-icon"></i><span class="sidemenu-label">CLIENT WITHDRAW</span></a>
