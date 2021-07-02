@@ -125,7 +125,7 @@ class ApiController extends Controller
             $bal=Transaction::where('compte','=',$sender->compte)
                 ->orderBy('id', 'DESC')->first();
        $receiver=User::where('compte','=',$request['receiver'])->first();
-            $moon=($request['amount']*3)/100;
+            $moon=($request['amount']*2)/100;
             $charges=(int)$moon;
        if ($bal){
            if ($bal->balances>($request['amount']+$charges)) {
@@ -150,6 +150,7 @@ class ApiController extends Controller
                            $deposit->amounts=$exchanged_amount;
                            $deposit->receiver_id=$receiver->id;
                            $deposit->category="Received";
+                           $deposit->compte=$receiver->compte;
                            $deposit->save();
                        }else {
                            $deposit = new Transaction();
@@ -158,6 +159,7 @@ class ApiController extends Controller
                            $deposit->amounts=$exchanged_amount;
                            $deposit->receiver_id=$receiver->id;
                            $deposit->category="Received";
+                           $deposit->compte=$receiver->compte;
                            $deposit->save();
                        }
                        $credit=new Transaction();
@@ -168,6 +170,7 @@ class ApiController extends Controller
                        $credit->previous_balances=$bal->balances;
                        $credit->balances=($bal->balances-($request['amount']+$charges));
                        $credit->fees=$charges;
+                       $credit->compte=$transfer->compte;
                        $credit->save();
                    $company=CompanyCompte::orderBy('id', 'DESC')->first();
                    if ($company){
