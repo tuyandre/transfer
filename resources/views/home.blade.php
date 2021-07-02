@@ -127,8 +127,10 @@
                             <div class="card-body p-4">
                                 <div class="row align-items-center">
                                     <div class="offset-xl-3 offset-sm-6 col-xl-8 col-sm-6 col-12 img-bg ">
-                                        <h4 class="d-flex  mb-3">
-                                            <span class="font-weight-bold text-white ">{{auth()->user()->name}}!</span>
+                                        <h4 class="d-flex  mb-3" style="display: flex;flex-direction: column">
+                                            <span class="font-weight-bold text-white ">{{auth()->user()->name}}</span>
+{{--                                            <span class="font-weight-bold text-green ">Your Compte: {{auth()->user()->compte}}</span>--}}
+                                            <p class="tx-white-7 mb-1">Your Compte: {{auth()->user()->compte}} </p>
                                         </h4>
                                         <p class="tx-white-7 mb-1">Welcome on Quick Money Transfer </p>
                                     </div>
