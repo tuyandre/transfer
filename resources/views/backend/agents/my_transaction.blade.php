@@ -32,8 +32,8 @@
                                 <th class="wd-20p">Previous Balannces</th>
                                 <th class="wd-20p">Amount</th>
                                 <th class="wd-20p">Balance</th>
-                                <th class="wd-15p">Charges</th>
                                 <th class="wd-15p">Category</th>
+                                <th class="wd-15p">Charges</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -61,16 +61,17 @@
                     url: defaultUrl,
                     dataSrc: 'transactions'
                 },
+                "ordering": false,
                 columns: [
 
                     {data: 'created_at'},
-                    {data: 'previous_balances'},
-                    {data: 'previous_balances'},
+                    {data: 'transfer.name'},
+                    {data: 'receiver.name'},
                     {data: 'previous_balances'},
                     {data: 'amounts'},
                     {data: 'balances'},
-                    {data: 'fees'},
-                    {data: 'category'}
+                    {data: 'category'},
+                    {data: 'fees'}
                 ]
             });
         }

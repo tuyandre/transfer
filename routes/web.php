@@ -42,6 +42,7 @@ Route::prefix('/Administration/')->group(
 
         Route::get('transactions/customers',[App\Http\Controllers\TransactionController::class,'index'])->name('admin.transactions.index');
         Route::get('transactions/getCustomerTransaction',[App\Http\Controllers\TransactionController::class,'getClientTransaction'])->name('admin.transactions.getClientTransaction');
+        Route::post('transactions/agentDeposit',[App\Http\Controllers\TransactionController::class,'agentDeposit'])->name('admin.transactions.agentDeposit');
 
         Route::get('transactions/compte',[App\Http\Controllers\TransactionController::class,'company_compte'])->name('admin.transactions.company_compte');
         Route::get('transactions/getCompteTransaction',[App\Http\Controllers\TransactionController::class,'getCompanyTransaction'])->name('admin.transactions.getCompanyTransaction');
@@ -52,6 +53,12 @@ Route::prefix('/Administration/')->group(
     function () {
         Route::get('clients/saving',[App\Http\Controllers\AgentController::class,'clientSaving'])->name('agent.clients.clientSaving');
         Route::get('clients/getClientSaving',[App\Http\Controllers\AgentController::class,'getClientSaving'])->name('agent.clients.getClientSaving');
+        Route::post('clients/saveClientSaving',[App\Http\Controllers\AgentController::class,'saveClientSaving'])->name('agent.clients.saveClientSaving');
+
+
+
+
+
 
         Route::get('clients/withdraw',[App\Http\Controllers\AgentController::class,'clientWithdraw'])->name('agent.clients.clientWithdraw');
         Route::get('clients/getClientWithdraw',[App\Http\Controllers\AgentController::class,'getClientWithdraw'])->name('agent.clients.getClientWithdraw');

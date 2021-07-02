@@ -16,6 +16,8 @@ class Transaction extends Model
         'amounts',
         'balances',
         'fees',
+        'compte',
+        'category',
     ];
     public function Transfer()
     {

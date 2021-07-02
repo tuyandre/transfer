@@ -61,11 +61,12 @@
                     url: defaultUrl,
                     dataSrc: 'transactions'
                 },
+                "ordering": false,
                 columns: [
 
                     {data: 'created_at'},
-                    {data: 'previous_balances'},
-                    {data: 'previous_balances'},
+                    {data: 'transfer.name'},
+                    {data: 'receiver.name'},
                     {data: 'previous_balances'},
                     {data: 'amounts'},
                     {data: 'balances'},

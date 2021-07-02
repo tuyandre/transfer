@@ -32,6 +32,7 @@
                                 <th class="wd-20p">Previous Balannces</th>
                                 <th class="wd-20p">Amount</th>
                                 <th class="wd-20p">Balance</th>
+                                <th class="wd-20p">Category</th>
                                 <th class="wd-15p">Charges</th>
                             </tr>
                             </thead>
@@ -51,11 +52,12 @@
 @section('js')
     <script>
 
-        var defaultUrl = "{{ route('admin.users.getCustomerDetail',['id'=>$user->id]) }}"
-        {{--var defaultUrl = '{{ route("admin.users.getCustomerDetail", ":id") }}';--}}
-        {{--var user="{{$user->id}}";--}}
-        {{--defaultUrl = url.replace(':id', user);--}}
-
+        {{--var defaultUrl = "{{ route('admin.users.getCustomerDetail',['id'=>$user->id]) }}"--}}
+        var defaultUrl = "{{ route("admin.users.getCustomerDetail", ":id") }}";
+        var user="{{$user->id}}";
+        console.log("customer id:"+user);
+        defaultUrl = defaultUrl.replace(':id', user);
+        console.log("customer url id:"+defaultUrl);
         var table;
         var manageTable = $("#userListTable");
         function myFunc() {
@@ -64,14 +66,16 @@
                     url: defaultUrl,
                     dataSrc: 'transactions'
                 },
+                "ordering": false,
                 columns: [
 
                     {data: 'created_at'},
-                    {data: 'previous_balances'},
-                    {data: 'previous_balances'},
+                    {data: 'transfer.name'},
+                    {data: 'receiver.name'},
                     {data: 'previous_balances'},
                     {data: 'amounts'},
                     {data: 'balances'},
+                    {data: 'category'},
                     {data: 'fees'}
                 ]
             });
@@ -79,12 +83,6 @@
 
 
         $(document).ready(function () {
-            $("#add_user").click(function(){
-                $("#addUser").modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-            });
             //initialize data table
             myFunc();
 

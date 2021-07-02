@@ -51,7 +51,7 @@
 @section('js')
     <script>
 
-        var defaultUrl = "{{ route('agent.clients.getClientSaving') }}";
+        var defaultUrl = "{{ route('agent.clients.getClientWithdraw') }}";
         var table;
         var manageTable = $("#userListTable");
         function myFunc() {

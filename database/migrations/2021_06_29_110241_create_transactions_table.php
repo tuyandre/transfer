@@ -22,6 +22,8 @@ class CreateTransactionsTable extends Migration
             $table->bigInteger('amounts')->default(0);
             $table->bigInteger('balances')->default(0);
             $table->bigInteger('fees')->default(0);
+            $table->bigInteger('compte');
+            $table->string('category')->default("saving");
             $table->timestamps();
             $table->foreign('transfer_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('agent_id')->references('id')->on('users')->onDelete('cascade');

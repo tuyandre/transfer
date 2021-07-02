@@ -156,7 +156,10 @@ class UserController extends Controller
         }
     }
     public function getCustomerDetail($id){
-        $trans=Transaction::all();
+        $trans=Transaction::with(['Transfer','Receiver'])
+            ->where('transfer_id','=',$id)
+            ->orWhere('receiver_id','=',$id)
+            ->orderBy('id', 'DESC')->get();
         return response()->json(['transactions' => $trans], 200);
     }
 }
