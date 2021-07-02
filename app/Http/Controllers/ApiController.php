@@ -113,8 +113,7 @@ class ApiController extends Controller
         }
         public function getClientBalance(Request $request){
 
-       $bal=Transaction::where('transfer_id','=',$request['client'])
-           ->orWhere('receiver_id','=',$request['client'])
+       $bal=Transaction::where('compte','=',$request['client'])
            ->orderBy('id', 'DESC')->first();
            return response()->json(['balance' => $bal], 200);
         }
