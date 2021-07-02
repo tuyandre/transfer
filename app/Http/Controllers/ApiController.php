@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\Temporary;
 use App\Models\Transaction;
 use App\Models\User;
+use App\TransferSms;
 use AshAllenDesign\LaravelExchangeRates\Classes\ExchangeRate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -189,6 +190,11 @@ class ApiController extends Controller
                        $rates->receiver_id=$receiver->id;
                        $rates->save();
                    }
+                   $sender_message=$transfer->name." "."Woherereje "." ".$receiver->name." "."Amafaranga"." ".$sent_amount.$currency1." "."Waciwe"." ".$charges;
+                   $receiver_message=$receiver->name." "."Wakiriye Amafaranga"." ".$exchanged_amount.$currency2." "."Avuye kuri"." ".$transfer->name;
+                   $sms=new TransferSms();
+                   $sms->sendSMS($transfer->telephone,$sender_message);
+                   $sms->sendSMS($receiver->telephone,$receiver_message);
                        return response()->json(['message' => "Transfer","transaction"=>$credit], 200);
 
 

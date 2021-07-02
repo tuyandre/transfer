@@ -6,6 +6,7 @@ use App\Models\CompanyCompte;
 use App\Models\Temporary;
 use App\Models\Transaction;
 use App\Models\User;
+use App\TransferSms;
 use AshAllenDesign\LaravelExchangeRates\Classes\ExchangeRate;
 use AmrShawky\LaravelCurrency\Facade\Currency;
 use Carbon\Carbon;
@@ -123,6 +124,13 @@ class AgentController extends Controller
                     $credit->previous_balances=$bal->balances;
                     $credit->balances=($bal->balances-$request['amount']);
                     $credit->save();
+
+                    $sender_message=Auth::user()->name." "."Kubitsa bigenze neza ,ubikiye "." ".$client->name." "."Amafaranga"." ".$sent_amount.$currency1;
+                    $receiver_message=$client->name." "."Ubikije  Amafaranga"." ".$exchanged_amount.$currency2." "."Avuye kuri"." ".Auth::user()->name;
+                    $sms=new TransferSms();
+                    $sms->sendSMS(Auth::user()->telephone,$sender_message);
+                    $sms->sendSMS($client->telephone,$receiver_message);
+
                     return response()->json(['status' => "ok","transaction"=>$credit], 200);
 
                 }else{
@@ -195,6 +203,14 @@ class AgentController extends Controller
                 $rates->save();
             }
             $temp->delete();
+
+
+            $sender_message=Auth::user()->name." "."Kubikuza bigenze neza kuri "." ".$client->name." "."Amafaranga"." ".$temp->amounts.$temp->currency." "."Yaciwe"." ".$charges;
+            $receiver_message=$client->name." "."Wabikuje Amafaranga"." ".$temp->amounts.$temp->currency." "."kuri Agent"." ".Auth::user()->name;
+            $sms=new TransferSms();
+            $sms->sendSMS(Auth::user()->telephone,$sender_message);
+            $sms->sendSMS($client->telephone,$receiver_message);
+
             return response()->json(['status' => "ok"], 200);
         }
     }

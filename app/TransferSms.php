@@ -9,7 +9,7 @@ class TransferSms
     public function sendSMS($phone,$message){
 
         $data = array(
-            "sender"=>'+250785780551',
+            "sender"=>'+250788866742',
             "recipients"=>'+25'.$phone,
             "message"=>$message
         ,);
