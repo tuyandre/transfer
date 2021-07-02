@@ -162,7 +162,7 @@
                                                     <h4 class="font-weight-bold">{{Auth::user()->currency}}{{number_format($bal->balances)}}</h4>
                                                         @else
                                                             <h4 class="font-weight-bold">{{Auth::user()->currency}}0</h4>
-                                                    @end
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
