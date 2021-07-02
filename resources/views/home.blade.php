@@ -158,7 +158,11 @@
                                                         ->orWhere('receiver_id','=',Auth::user()->id)
                                                         ->orderBy('id', 'DESC')->first();
                                                     ?>
+                                                    @if($bal)
                                                     <h4 class="font-weight-bold">{{Auth::user()->currency}}{{number_format($bal->balances)}}</h4>
+                                                        @else
+                                                            <h4 class="font-weight-bold">{{Auth::user()->currency}}0</h4>
+                                                    @end
                                                 </div>
                                             </div>
                                         </div>

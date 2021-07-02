@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Models\User;
 use AshAllenDesign\LaravelExchangeRates\Classes\ExchangeRate;
+use AmrShawky\LaravelCurrency\Facade\Currency;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,10 +74,12 @@ class AgentController extends Controller
                     $currency1 = Auth::user()->currency;
                     $currency2 = $client->currency;
 
-                    $exchangeRates = new ExchangeRate();
                     $sent_amount=$request['amount'];
-                    $exchanged_amount=$exchangeRates->convert($sent_amount, $currency1, $currency2, Carbon::now());
-
+                    $exchanged_amount=Currency::convert()
+                        ->from($currency1)
+                        ->to($currency2)
+                        ->amount($sent_amount)
+                        ->get();
                     $lastRecord=Transaction::where('compte','=',$client->compte)
                         ->orderBy('id', 'DESC')->first();
                     if ($lastRecord){

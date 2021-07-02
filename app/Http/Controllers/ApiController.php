@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use AmrShawky\LaravelCurrency\Facade\Currency;
 use App\Models\Role;
 use App\Models\Transaction;
 use App\Models\User;
@@ -130,13 +131,12 @@ class ApiController extends Controller
                    $currency1 = $transfer->currency;
                    $currency2 = $receiver->currency;
 
-
-
-                   $exchangeRates = new ExchangeRate();
                    $sent_amount=$request['amount'];
-                   $exchanged_amount=$exchangeRates->convert($sent_amount, $currency1, $currency2, Carbon::now());
-
-
+                   $exchanged_amount=Currency::convert()
+                       ->from($currency1)
+                       ->to($currency2)
+                       ->amount($sent_amount)
+                       ->get();
                        $lastRecord=Transaction::where('transfer_id','=',$receiver->id)
                            ->orWhere('receiver_id','=',$receiver->id)
                            ->orderBy('id', 'DESC')->first();
