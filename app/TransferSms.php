@@ -15,8 +15,8 @@ class TransferSms
         ,);
         $url = "https://www.intouchsms.co.rw/api/sendsms/.json";
         $data = http_build_query($data);
-        $username="tuyandre20";
-        $password="kamana1234567";
+        $username="didine";
+        $password="kamana123456@";
 
         $ch = curl_init();
         curl_setopt($ch,CURLOPT_URL, $url);
