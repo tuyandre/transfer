@@ -23,7 +23,6 @@ Route::post('/client/clientTransferMoney',[App\Http\Controllers\ApiController::c
 Route::post('/client/clientWithdrawMoney',[App\Http\Controllers\ApiController::class,'clientWithdraw'])->name('api.clients.clientWithdrawMoney');
 
 Route::post('/client/checkuser',[App\Http\Controllers\ApiController::class,'clientcheckuser'])->name('api.clients.clientcheckuser');
-Route::post('/client/checkotp',[App\Http\Controllers\ApiController::class,'checkotp'])->name('api.clients.checkotp');
 
 
 
