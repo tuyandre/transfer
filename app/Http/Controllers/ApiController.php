@@ -7,6 +7,7 @@ use App\Models\CompanyCompte;
 use App\Models\Role;
 use App\Models\Temporary;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\TransferSms;
 use AshAllenDesign\LaravelExchangeRates\Classes\ExchangeRate;
@@ -114,6 +115,39 @@ class ApiController extends Controller
            ->get();
             return response()->json(['transactions' => $transaction], 200);
         }
+
+        public function checkotp(Request $request){
+           // $profi=DB::Table('users')->select('profile')->where('id',$request['client'])->get();
+    
+           $profi =User::where('id', $request['client'])->value('profile');
+           if($profi ==$request['code']){
+            return response()->json(['result:' =>'ok'], 201);
+
+        }else{
+            return response()->json(['result:' =>'Invalid authentication code'], 401);
+        }
+            
+        }
+
+        public function  clientcheckuser(Request $request){ 
+
+            
+        $otpnber = mt_rand(100000, 999999);
+        
+    
+            DB::table('users')->where('id',$request['client'])->limit(1)->update(['profile' => $otpnber]);
+        
+            $userphone=DB::table('users')->where('id',$request['client'])->first()->telephone;
+            $username=DB::table('users')->where('id',$request['client'])->first()->name;
+            
+            $sms=new TransferSms();
+            $sms->sendSMS($userphone,'Hello '.$username.' Your Authentication code for QMT system is '.$otpnber);
+         
+            return response()->json(['message:' =>'authentication code is sent successfully'], 201);
+
+
+        }
+
         public function getClientBalance(Request $request){
 
        $bal=Transaction::where('compte','=',$request['client'])
